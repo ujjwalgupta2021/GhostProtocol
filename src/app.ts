@@ -864,13 +864,13 @@ class GhostProtocolApp {
    - *Evidence*: \`"URGENT: Your 90% VIP Membership Discount is Expiring in 10 Minutes!"\`
    - *Statute*: **FTC Act § 5 (Unfair and Deceptive Practices)** & **EU Digital Services Act (DSA) Article 25**.
 2. **Cloaked CSS Micro-Print & Negative Option Subscription**
-   - *Evidence*: \`<div style="font-size: 1px; color: transparent; line-height: 0; opacity: 0;">By clicking the link above... you agree to an auto-recurring billing fee of $49.99/month...\`
+   - *Evidence*: Hidden text disguised in invisible 1px font: *"By clicking the link above... you agree to an auto-recurring billing fee of $49.99/month..."*
    - *Statute*: **FTC Restore Online Shoppers' Confidence Act (ROSCA)**.
 3. **Confirm-Shaming Psychological Coercion**
    - *Evidence*: \`"No thanks, I hate saving money and I prefer paying full price on all future purchases."\`
    - *Statute*: **EU DSA Article 25 (Dark Patterns Prohibition)**.
 4. **Surveillance & Location Telemetry Beacon**
-   - *Evidence*: \`<img src="https://trk.notification-dealvortex.com/pixel.gif?uid=9928192&opened=true" width="1" height="1" style="display:none;" />\`
+   - *Evidence*: Hidden 1x1 tracking beacon (\`pixel.gif?uid=9928192\`) embedded to silently track email opens and device IP.
    - *Statute*: **EU ePrivacy Directive Article 5(3)** (Unauthorized read receipt tracking without affirmative consent).
 
 #### 3. TACTICAL DEFENSE PROTOCOL
