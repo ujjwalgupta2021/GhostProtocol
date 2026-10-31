@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GhostProtocol — Your Private Email Defense & Privacy Assistant</title>
+    <meta name="description" content="100% private, browser-based tool to catch sneaky email tricks, translate confusing corporate jargon into plain English, and generate official data-deletion letters using Google AI." />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body class="min-h-screen flex flex-col font-sans selection:bg-cyan-500 selection:text-black relative text-base">
+    <!-- Interactive Canvas Particle / Neural Network Background -->
+    <canvas id="networkCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- Ambient Background Glows -->
+    <div class="ambient-glow"></div>
+
+    <!-- Top Navigation & Key Setup Bar -->
+    <header class="relative z-20 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#0B0F19]/95 backdrop-blur-md sticky top-0 shadow-sm dark:shadow-lg dark:shadow-black/40 transition-colors">
+      <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <!-- Brand & Privacy Guarantee -->
+        <div class="flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-600/30 border border-cyan-400/40 flex items-center justify-center shadow-md shadow-cyan-500/10 shrink-0">
+            <svg class="w-7 h-7 text-cyan-500 dark:text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2.5">
+              <span class="text-xl sm:text-2xl font-black tracking-wide text-slate-900 dark:text-white">Ghost<span class="text-cyan-500 dark:text-cyan-400">Protocol</span></span>
+              <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-cyan-100 dark:bg-cyan-950/80 border border-cyan-300 dark:border-cyan-700/60 text-cyan-800 dark:text-cyan-300">PRIVACY WORKSTATION</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300 mt-0.5">
+              <span class="flex h-2.5 w-2.5 relative shrink-0">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              </span>
+              <span class="text-emerald-600 dark:text-emerald-400 font-bold">100% Client-Side Private</span>
+              <span class="text-slate-300 dark:text-slate-600">•</span>
+              <span>Emails never leave your device</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- API Key, Model Switcher, Theme Toggle & Session Wipe -->
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- AI Engine Selection -->
+          <div class="flex items-center bg-slate-100 dark:bg-[#111827] border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 rounded-lg px-3 py-2 shadow-inner">
+            <span class="text-sm font-bold text-slate-600 dark:text-slate-400 mr-2 hidden sm:inline">Model:</span>
+            <select id="modelSelect" class="bg-transparent text-sm font-mono font-bold text-cyan-600 dark:text-cyan-400 focus:outline-none cursor-pointer">
+              <option value="auto" selected class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">⚡ Auto-Smart (Fastest & Auto-Fallback)</option>
+              <option value="gemini-3.8-flash" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Gemini 3.8 Flash (Active Production)</option>
+              <option value="gemini-3.8-pro" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Gemini 3.8 Pro (Deep Reasoning)</option>
+            </select>
+          </div>
+
+          <!-- BYOK Input Field -->
+          <div class="relative flex items-center bg-slate-100 dark:bg-[#111827] border border-slate-300 dark:border-slate-700 focus-within:border-cyan-500 dark:focus-within:border-cyan-400 focus-within:ring-2 focus-within:ring-cyan-400/20 rounded-lg px-3 py-2 shadow-inner transition-all">
+            <svg class="w-4 h-4 text-cyan-500 dark:text-cyan-400 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+            </svg>
+            <input
+              type="password"
+              id="apiKeyInput"
+              placeholder="Paste Gemini API Key (starts with AIza...)"
+              class="bg-transparent text-sm font-mono text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none w-56 sm:w-72"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button id="toggleKeyVisibility" type="button" class="text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 ml-1.5 p-1 transition-colors cursor-pointer" title="Show or hide your key">
+              <svg id="eyeIcon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </button>
+            <div id="keyStatusBadge" class="hidden ml-2 flex items-center gap-1 text-xs font-mono font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/70 px-2 py-0.5 rounded border border-emerald-300 dark:border-emerald-700/60" title="Key saved safely in your browser">
+              SAVED
+            </div>
+          </div>
+
+          <!-- Free Key Link -->
+          <a
+            href="https://aistudio.google.com/app/apikey"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hidden sm:inline-flex text-sm font-bold text-cyan-600 dark:text-cyan-400 hover:underline px-2 py-1"
+            title="Get a free Gemini API key from Google AI Studio in 30 seconds"
+          >
+            Get Free Key ↗
+          </a>
+
+          <!-- Theme Toggle Button (Light / Dark Mode) -->
+          <button
+            id="themeToggleBtn"
+            type="button"
+            class="flex items-center justify-center w-10 h-10 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-[#111827] hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-amber-400 transition-all cursor-pointer shadow-sm"
+            title="Toggle Light or Dark Mode"
+          >
+            <!-- Sun Icon (shown in dark mode) -->
+            <svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <!-- Moon Icon (shown in light mode) -->
+            <svg id="moonIcon" class="w-5 h-5 block dark:hidden text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
+
+          <!-- Wipe Everything Button -->
+          <button
+            id="nukeSessionBtn"
+            type="button"
+            class="flex items-center gap-1.5 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800/80 hover:border-rose-400 dark:hover:border-rose-500 rounded-lg px-3 py-2 text-sm font-bold transition-all shadow-sm cursor-pointer"
+            title="Permanently remove your saved API key and clear the screen"
+          >
+            <svg class="w-4 h-4 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            <span>Wipe Data</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col gap-8">
+
+      <!-- Friendly Beginner Welcome & Quick-Start Guide -->
+      <section class="pro-card rounded-2xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700/80 bg-gradient-to-r from-white via-slate-50 to-white dark:from-[#0F172A] dark:via-[#111C35] dark:to-[#0F172A] shadow-md dark:shadow-xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="max-w-2xl">
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white flex items-center gap-3">
+              <span>🛡️ Your Personal Email Shield & Translator</span>
+            </h1>
+            <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">
+              Have you ever received a confusing company email, a cancellation guilt-trip, or fine print with hidden recurring charges? 
+              <strong class="text-slate-900 dark:text-white font-bold">GhostProtocol</strong> uses AI to inspect emails directly inside your browser — catching manipulative tricks, turning corporate PR spin into plain English, and generating official legal notices to make companies delete your data.
+            </p>
+          </div>
+
+          <!-- 3 Quick Steps -->
+          <div class="grid grid-cols-3 gap-3 shrink-0 text-center font-bold">
+            <div class="bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex flex-col items-center shadow-sm">
+              <span class="text-2xl">1️⃣</span>
+              <span class="text-sm font-bold text-slate-900 dark:text-white mt-1.5">Pick a Goal</span>
+              <span class="text-xs text-slate-500 dark:text-slate-400">Step 1 below</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex flex-col items-center shadow-sm">
+              <span class="text-2xl">2️⃣</span>
+              <span class="text-sm font-bold text-slate-900 dark:text-white mt-1.5">Add Email</span>
+              <span class="text-xs text-slate-500 dark:text-slate-400">Or click example</span>
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex flex-col items-center shadow-sm">
+              <span class="text-2xl">3️⃣</span>
+              <span class="text-sm font-bold text-slate-900 dark:text-white mt-1.5">Get Insights</span>
+              <span class="text-xs text-slate-500 dark:text-slate-400">Instant results</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 1: Choose What You Want To Do (3 Friendly Options) -->
+      <section>
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm sm:text-base font-black uppercase tracking-wider text-cyan-600 dark:text-cyan-400 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-cyan-100 dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 border border-cyan-300 dark:border-cyan-400/40 flex items-center justify-center text-xs font-extrabold">1</span>
+            STEP 1: CHOOSE YOUR GOAL
+          </h2>
+          <span class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">Click any card to switch</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Card 1: Spot Sneaky Tricks -->
+          <div
+            id="mission-dark_patterns"
+            data-mission="dark_patterns"
+            class="mission-card pro-card mission-active-cyan rounded-2xl p-5 cursor-pointer transition-all flex flex-col justify-between group shadow-sm dark:shadow-md"
+          >
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 rounded-xl bg-cyan-100 dark:bg-cyan-500/20 border border-cyan-300 dark:border-cyan-400/40 text-cyan-700 dark:text-cyan-300 flex items-center justify-center text-2xl shadow-sm">
+                  🕵️
+                </div>
+                <span class="text-xs font-black tracking-wide px-2.5 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-950/90 border border-cyan-300 dark:border-cyan-700/80 text-cyan-800 dark:text-cyan-300">
+                  CATCH SNEAKY TRICKS
+                </span>
+              </div>
+              <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
+                Spot Deceptive Dark Patterns
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Finds hidden fees, fake countdown timers, guilt-trip buttons ("No thanks, I hate saving"), and sneaky auto-renewal traps.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 text-xs sm:text-sm font-bold text-cyan-600 dark:text-cyan-400 flex items-center justify-between">
+              <span>Consumer Protection Check</span>
+              <span id="badge-dark_patterns" class="mission-status-badge flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-cyan-500 dark:bg-cyan-400 animate-pulse"></span>
+                [SELECTED]
+              </span>
+            </div>
+          </div>
+
+          <!-- Card 2: Delete My Data -->
+          <div
+            id="mission-gdpr_ultimatum"
+            data-mission="gdpr_ultimatum"
+            class="mission-card pro-card rounded-2xl p-5 cursor-pointer transition-all flex flex-col justify-between opacity-80 hover:opacity-100 group shadow-sm dark:shadow-md"
+          >
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-400/40 text-emerald-700 dark:text-emerald-300 flex items-center justify-center text-2xl shadow-sm">
+                  ⚖️
+                </div>
+                <span class="text-xs font-black tracking-wide px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/90 border border-emerald-300 dark:border-emerald-700/80 text-emerald-800 dark:text-emerald-300">
+                  LEGAL DATA DELETION
+                </span>
+              </div>
+              <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors">
+                Write a "Delete My Data" Letter
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Generates a formal legal demand (GDPR Art. 17 & CCPA) forcing the company to erase your account, history, and telemetry.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400 flex items-center justify-between">
+              <span>Includes 1-Click Mailto Link</span>
+              <span id="badge-gdpr_ultimatum" class="mission-status-badge">[CLICK TO SELECT]</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Translate Jargon -->
+          <div
+            id="mission-jargon_scrub"
+            data-mission="jargon_scrub"
+            class="mission-card pro-card rounded-2xl p-5 cursor-pointer transition-all flex flex-col justify-between opacity-80 hover:opacity-100 group shadow-sm dark:shadow-md"
+          >
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-500/20 border border-purple-300 dark:border-purple-400/40 text-purple-700 dark:text-purple-300 flex items-center justify-center text-2xl shadow-sm">
+                  🧹
+                </div>
+                <span class="text-xs font-black tracking-wide px-2.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950/90 border border-purple-300 dark:border-purple-700/80 text-purple-800 dark:text-purple-300">
+                  PLAIN-ENGLISH TRANSLATOR
+                </span>
+              </div>
+              <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
+                Translate Corporate Jargon
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Turns confusing terms updates, price hikes, and PR double-speak into a clean 2-column table: <em>"What they said"</em> vs. <em>"What it means"</em>.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 text-xs sm:text-sm font-bold text-purple-600 dark:text-purple-400 flex items-center justify-between">
+              <span>Cuts Through Corporate Spin</span>
+              <span id="badge-jargon_scrub" class="mission-status-badge">[CLICK TO SELECT]</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 2 & 3: Perfectly Balanced 50/50 Workspace (Left: Input / Right: Results) -->
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        
+        <!-- Left Column: Step 2 - Ingestion & Controls (Balanced 50%) -->
+        <div class="flex flex-col gap-4">
+          <div class="pro-card rounded-2xl p-5 flex flex-col gap-3.5 shadow-sm dark:shadow-lg">
+            
+            <!-- Step 2 Header -->
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm sm:text-base font-black uppercase tracking-wider text-cyan-600 dark:text-cyan-400 flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-cyan-100 dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 border border-cyan-300 dark:border-cyan-400/40 flex items-center justify-center text-xs font-extrabold">2</span>
+                STEP 2: ADD YOUR EMAIL
+              </h2>
+              <span class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">Paste text or drop file</span>
+            </div>
+
+            <!-- 1-Click Interactive Example Bar (Compact 1-row strip) -->
+            <div class="bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 flex flex-wrap items-center justify-between gap-2">
+              <span class="text-xs sm:text-sm font-bold text-cyan-700 dark:text-cyan-400 flex items-center gap-1.5 shrink-0">
+                <span>✨</span> Instant Examples:
+              </span>
+              <div class="flex flex-wrap items-center gap-1.5 grow sm:justify-end">
+                <button
+                  id="sampleBtn-dark"
+                  type="button"
+                  class="bg-white dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-950/80 border border-slate-200 dark:border-slate-700 hover:border-cyan-400 dark:hover:border-cyan-500 text-slate-800 dark:text-slate-200 rounded-lg px-3 py-1.5 text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-sm hover:shadow"
+                >
+                  🛒 Sneaky Store
+                </button>
+                <button
+                  id="sampleBtn-jargon"
+                  type="button"
+                  class="bg-white dark:bg-slate-800 hover:bg-purple-50 dark:hover:bg-purple-950/80 border border-slate-200 dark:border-slate-700 hover:border-purple-400 dark:hover:border-purple-500 text-slate-800 dark:text-slate-200 rounded-lg px-3 py-1.5 text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-sm hover:shadow"
+                >
+                  🏢 Terms Update
+                </button>
+                <button
+                  id="sampleBtn-gdpr"
+                  type="button"
+                  class="bg-white dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/80 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-500 text-slate-800 dark:text-slate-200 rounded-lg px-3 py-1.5 text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-sm hover:shadow"
+                >
+                  ⚖️ Stubborn App
+                </button>
+              </div>
+            </div>
+
+            <!-- Integrated Drag-and-Drop & Textarea -->
+            <div class="flex flex-col gap-2">
+              <!-- Drag and Drop Bar (Compact 1-line strip) -->
+              <div
+                id="dropzone"
+                class="border border-dashed border-slate-300 dark:border-slate-700 hover:border-cyan-500 dark:hover:border-cyan-400 rounded-xl px-3.5 py-2.5 text-center cursor-pointer transition-all bg-slate-50 dark:bg-[#0B0F19]/60 hover:bg-slate-100 dark:hover:bg-[#111827] flex items-center justify-center gap-2 group"
+              >
+                <input type="file" id="fileInput" accept=".eml,.msg,.txt,.html" class="hidden" />
+                <svg class="w-4 h-4 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  <strong class="text-cyan-600 dark:text-cyan-400 font-bold">Drop .eml/.msg file</strong> or click to browse
+                </span>
+                <div id="fileLoadedIndicator" class="hidden text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 ml-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span id="loadedFileName">email.eml</span>
+                </div>
+              </div>
+
+              <!-- Raw Text Area -->
+              <div class="relative">
+                <textarea
+                  id="emailPayload"
+                  rows="9"
+                  placeholder="Or paste email subject & body text here..."
+                  class="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 focus:border-cyan-500 dark:focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 rounded-xl p-3 text-sm sm:text-base font-mono-cyber text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none resize-y transition-colors leading-relaxed min-h-[220px] sm:min-h-[250px]"
+                  spellcheck="false"
+                ></textarea>
+                <div class="flex items-center justify-between mt-1 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
+                  <span id="charCount">0 characters</span>
+                  <span id="mimeParsedBadge" class="hidden text-cyan-700 dark:text-cyan-400 font-bold bg-cyan-100 dark:bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-300 dark:border-cyan-800 text-xs font-mono">Email Format Detected</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Compact Dual Row: Privacy Toggle & Instant Scan -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-slate-200 dark:border-slate-800">
+              <!-- Privacy Toggle -->
+              <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-slate-800">
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input type="checkbox" id="sanitizePiiToggle" checked class="w-4 h-4 rounded text-cyan-600 cursor-pointer" />
+                  <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">🔒 Anonymize PII</span>
+                </label>
+                <span id="redactionBadge" class="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/80 px-2.5 py-0.5 rounded border border-emerald-300 dark:border-emerald-800">
+                  PROTECTED
+                </span>
+              </div>
+
+              <!-- Instant Browser Scan -->
+              <div id="heuristicBox" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-slate-800">
+                <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+                  Instant Scan:
+                </span>
+                <span id="heuristicRiskScore" class="px-2.5 py-0.5 rounded-full text-xs sm:text-sm font-black bg-slate-200 dark:bg-slate-800 text-cyan-700 dark:text-cyan-400 border border-slate-300 dark:border-slate-700">
+                  SCORE: 0 / 100
+                </span>
+              </div>
+            </div>
+            <div id="heuristicBadgesContainer" class="flex flex-wrap gap-1.5 text-xs sm:text-sm font-medium"></div>
+
+            <!-- Analysis Depth Mode Selector (Fast Summary vs Deep Legal Audit) -->
+            <div class="flex flex-col gap-1.5">
+              <div class="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
+                <span class="uppercase tracking-wider">Report Depth:</span>
+                <span class="text-slate-500 font-normal">Click to switch speed</span>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-2.5">
+                <!-- Option 1: Fast Summary -->
+                <button
+                  id="depthQuickBtn"
+                  type="button"
+                  class="depth-btn p-3.5 rounded-xl border-2 text-left transition-all cursor-pointer flex items-center justify-between group shadow-sm bg-cyan-50 dark:bg-cyan-950/60 border-cyan-500 dark:border-cyan-400 text-slate-900 dark:text-white ring-2 ring-cyan-500/20"
+                >
+                  <div>
+                    <span class="font-bold text-sm sm:text-base text-cyan-800 dark:text-cyan-300 flex items-center gap-1.5">
+                      <span>⚡</span> Fast Summary
+                    </span>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">10-sec read (3 bullets)</p>
+                  </div>
+                  <span id="depthQuickBadge" class="text-xs font-mono font-black px-2.5 py-0.5 rounded-full bg-cyan-200 dark:bg-cyan-900 text-cyan-900 dark:text-cyan-200">
+                    ACTIVE
+                  </span>
+                </button>
+
+                <!-- Option 2: Deep Audit -->
+                <button
+                  id="depthDetailedBtn"
+                  type="button"
+                  class="depth-btn p-3.5 rounded-xl border-2 text-left transition-all cursor-pointer flex items-center justify-between group shadow-sm bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 opacity-75 hover:opacity-100 text-slate-700 dark:text-slate-300"
+                >
+                  <div>
+                    <span class="font-bold text-sm sm:text-base text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                      <span>🔬</span> Deep Audit
+                    </span>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Full legal citations</p>
+                  </div>
+                  <span id="depthDetailedBadge" class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                    OFF
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Action Button: Execute Analysis -->
+            <button
+              id="executeBtn"
+              type="button"
+              class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-sm sm:text-base py-3.5 px-5 rounded-xl shadow-lg shadow-cyan-500/25 hover:shadow-cyan-400/40 transition-all flex items-center justify-center gap-2 uppercase tracking-wide cursor-pointer"
+            >
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                <path d="M4.5 3.5l11 6.5-11 6.5v-13z" />
+              </svg>
+              <span id="executeBtnText">Analyze Email Now (Fast Summary)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Step 3 - Results Dossier & Actions (Balanced 50%, Sticky Viewport) -->
+        <div id="resultsDeck" class="flex flex-col gap-4 lg:sticky lg:top-20 scroll-mt-24">
+          <div class="pro-card rounded-2xl overflow-hidden flex flex-col border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl dark:shadow-black/50">
+            
+            <!-- Result Window Header -->
+            <div class="bg-slate-100 dark:bg-[#111827] border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="w-6 h-6 rounded-full bg-cyan-100 dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 border border-cyan-300 dark:border-cyan-400/40 flex items-center justify-center text-xs font-black">3</span>
+                <span class="text-sm sm:text-base font-black uppercase tracking-wider text-cyan-600 dark:text-cyan-400">STEP 3: RESULTS & ACTIONS</span>
+              </div>
+              <div class="flex items-center gap-2 text-xs sm:text-sm font-mono font-bold">
+                <span id="telemetryBadge" class="text-slate-500 dark:text-slate-400">READY</span>
+              </div>
+            </div>
+
+            <!-- Results Viewport (Matched height with internal scrolling) -->
+            <div id="terminalViewport" class="p-5 sm:p-6 min-h-[440px] max-h-[520px] overflow-y-auto bg-white dark:bg-[#080C14] relative text-sm sm:text-base text-slate-800 dark:text-slate-200 leading-relaxed transition-colors">
+              
+              <!-- Empty State Guide -->
+              <div id="terminalPlaceholder" class="flex flex-col items-center justify-center text-center h-full py-12 text-slate-400 gap-3 select-none">
+                <div class="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-3xl shadow-inner text-cyan-600 dark:text-cyan-400 p-3">
+                  📋
+                </div>
+                <div class="max-w-sm">
+                  <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-1.5">Your Results Will Appear Here</h3>
+                  <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    1. Select a goal above.<br />
+                    2. Click an <strong>instant example</strong> on the left or paste text.<br />
+                    3. Click <strong>"Analyze Email Now"</strong> to expose what the company is doing.
+                  </p>
+                </div>
+                <div class="flex items-center gap-2 text-xs sm:text-sm text-slate-500 bg-slate-100 dark:bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 mt-1 font-medium">
+                  <span>🔒 Safe & Private: Processed with your Gemini key</span>
+                </div>
+              </div>
+
+              <!-- Loading Scanner -->
+              <div id="terminalLoader" class="hidden flex-col items-center justify-center py-24 text-center gap-4">
+                <div class="relative w-16 h-16">
+                  <div class="absolute inset-0 rounded-full border-2 border-cyan-500/20"></div>
+                  <div class="absolute inset-0 rounded-full border-2 border-transparent border-t-cyan-500 animate-spin"></div>
+                  <div class="absolute inset-2.5 rounded-full border-2 border-transparent border-t-blue-500 animate-radar"></div>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <p class="text-sm sm:text-base font-extrabold text-cyan-600 dark:text-cyan-400 tracking-wide animate-pulse">ANALYZING EMAIL...</p>
+                  <p id="loaderStatusMsg" class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">Looking for hidden tactics, legal terms, and tracking pixels</p>
+                </div>
+              </div>
+
+              <!-- Live Rendered Markdown Container -->
+              <div id="terminalContent" class="markdown-terminal hidden"></div>
+            </div>
+
+            <!-- Action Toolbar (Copy, Deep Audit CTA, Mailto, Download) -->
+            <div class="bg-slate-100 dark:bg-[#111827] border-t border-slate-200 dark:border-slate-800 p-3 flex flex-wrap items-center justify-between gap-2.5 text-xs sm:text-sm">
+              <div class="flex flex-wrap items-center gap-2">
+                <!-- One-Click Copy Result -->
+                <button
+                  id="copyBtn"
+                  type="button"
+                  disabled
+                  class="flex items-center gap-1.5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold px-3 py-2 rounded-lg transition-all shadow-sm cursor-pointer"
+                >
+                  <svg class="w-4 h-4 text-cyan-600 dark:text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                  </svg>
+                  <span id="copyBtnText">Copy Results</span>
+                </button>
+
+                <!-- On-Demand Deep Legal Audit Button -->
+                <button
+                  id="requestDeepAuditBtn"
+                  type="button"
+                  class="hidden flex items-center gap-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold px-3 py-2 rounded-lg transition-all shadow-md cursor-pointer"
+                  title="Generate an exhaustive legal breakdown with regulatory statutes and evidence"
+                >
+                  <svg class="w-4 h-4 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                  </svg>
+                  <span>🔬 Deep Audit</span>
+                </button>
+
+                <!-- Mailto: Launch Legal Ultimatum -->
+                <a
+                  id="mailtoBtn"
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="hidden flex items-center gap-1.5 bg-emerald-600 dark:bg-emerald-950 hover:bg-emerald-700 dark:hover:bg-emerald-900 border border-emerald-500 dark:border-emerald-500/70 text-white dark:text-emerald-300 font-bold px-3 py-2 rounded-lg transition-all shadow-md dark:shadow-lg dark:shadow-emerald-900/30 cursor-pointer"
+                >
+                  <svg class="w-4 h-4 text-white dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span>✉️ Open in Email</span>
+                </a>
+
+                <!-- Export as Markdown -->
+                <button
+                  id="exportDossierBtn"
+                  type="button"
+                  disabled
+                  class="flex items-center gap-1.5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-bold px-3 py-2 rounded-lg transition-all shadow-sm cursor-pointer"
+                  title="Download results as a markdown file"
+                >
+                  <svg class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  <span>Download .MD</span>
+                </button>
+              </div>
+
+              <!-- Clear Screen -->
+              <button
+                id="clearTerminalBtn"
+                type="button"
+                class="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-bold px-2 py-1 transition-colors cursor-pointer text-xs sm:text-sm"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Friendly Footer -->
+    <footer class="relative z-10 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0B0F19] py-5 mt-auto text-sm text-slate-600 dark:text-slate-400 transition-colors">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <span class="text-cyan-600 dark:text-cyan-400 font-bold">🔒 Built for Privacy:</span>
+          <span>Zero tracking. No remote servers. Your data stays on your device.</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-slate-600 dark:text-slate-400">DEV Challenge Week 4: "Ghost in the Machine"</span>
+          <span class="text-slate-300 dark:text-slate-700">•</span>
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="text-cyan-600 dark:text-cyan-400 hover:underline font-bold">Open Source GitHub Code</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- App Entrypoint -->
+    <script type="module" src="/src/app.ts"></script>
+  </body>
+</html>

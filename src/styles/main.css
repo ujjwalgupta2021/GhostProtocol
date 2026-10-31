@@ -1,0 +1,412 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+
+  body {
+    transition: background-color 0.25s ease, color 0.25s ease;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* Dark mode default */
+  html.dark body {
+    background-color: #080c14;
+    color: #f1f5f9;
+  }
+
+  /* Light mode */
+  html:not(.dark) body {
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+}
+
+/* Ambient Radial Glows */
+.ambient-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+html.dark .ambient-glow {
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(99, 102, 241, 0.07) 0%, transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+}
+
+html:not(.dark) .ambient-glow {
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
+}
+
+/* Monospace Font Utility */
+.font-mono-cyber {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+/* Professional Card Panels */
+.pro-card {
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.dark .pro-card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+html.dark .pro-card:hover {
+  border-color: #334155;
+}
+
+html:not(.dark) .pro-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+}
+
+html:not(.dark) .pro-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+}
+
+/* Mission Card Active Theme States */
+html.dark .mission-active-cyan {
+  border-color: #06b6d4 !important;
+  background: linear-gradient(180deg, #10213d 0%, #0f172a 100%) !important;
+  box-shadow: 0 0 25px -4px rgba(6, 182, 212, 0.35), inset 0 1px 0 0 rgba(6, 182, 212, 0.4) !important;
+}
+
+html:not(.dark) .mission-active-cyan {
+  border-color: #06b6d4 !important;
+  background: linear-gradient(180deg, #ecfeff 0%, #ffffff 100%) !important;
+  box-shadow: 0 4px 20px -2px rgba(6, 182, 212, 0.2), inset 0 1px 0 0 rgba(6, 182, 212, 0.3) !important;
+}
+
+html.dark .mission-active-emerald {
+  border-color: #10b981 !important;
+  background: linear-gradient(180deg, #0d2826 0%, #0f172a 100%) !important;
+  box-shadow: 0 0 25px -4px rgba(16, 185, 129, 0.35), inset 0 1px 0 0 rgba(16, 185, 129, 0.4) !important;
+}
+
+html:not(.dark) .mission-active-emerald {
+  border-color: #10b981 !important;
+  background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%) !important;
+  box-shadow: 0 4px 20px -2px rgba(16, 185, 129, 0.2), inset 0 1px 0 0 rgba(16, 185, 129, 0.3) !important;
+}
+
+html.dark .mission-active-purple {
+  border-color: #a855f7 !important;
+  background: linear-gradient(180deg, #1e1738 0%, #0f172a 100%) !important;
+  box-shadow: 0 0 25px -4px rgba(168, 85, 247, 0.35), inset 0 1px 0 0 rgba(168, 85, 247, 0.4) !important;
+}
+
+html:not(.dark) .mission-active-purple {
+  border-color: #a855f7 !important;
+  background: linear-gradient(180deg, #faf5ff 0%, #ffffff 100%) !important;
+  box-shadow: 0 4px 20px -2px rgba(168, 85, 247, 0.2), inset 0 1px 0 0 rgba(168, 85, 247, 0.3) !important;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+
+html:not(.dark) ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #253348;
+  border-radius: 5px;
+}
+
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #06b6d4;
+}
+
+/* Markdown typography inside Forensic Terminal Deck (Scaled Up for High Readability) */
+.markdown-terminal {
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+html.dark .markdown-terminal {
+  color: #f1f5f9;
+}
+
+html:not(.dark) .markdown-terminal {
+  color: #1e293b;
+}
+
+.markdown-terminal h1 {
+  font-size: 1.55rem;
+  font-weight: 800;
+  margin-top: 1.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+html.dark .markdown-terminal h1 {
+  color: #22d3ee;
+  border-bottom: 2px solid #1e293b;
+}
+
+html:not(.dark) .markdown-terminal h1 {
+  color: #0891b2;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.markdown-terminal h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+html.dark .markdown-terminal h2 {
+  color: #38bdf8;
+}
+
+html:not(.dark) .markdown-terminal h2 {
+  color: #0284c7;
+}
+
+.markdown-terminal h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.02em;
+}
+
+html.dark .markdown-terminal h3 {
+  color: #a5f3fc;
+}
+
+html:not(.dark) .markdown-terminal h3 {
+  color: #0e7490;
+}
+
+.markdown-terminal p {
+  margin-bottom: 1rem;
+  font-size: 1.025rem;
+}
+
+html.dark .markdown-terminal p {
+  color: #cbd5e1;
+}
+
+html:not(.dark) .markdown-terminal p {
+  color: #334155;
+}
+
+.markdown-terminal strong {
+  font-weight: 700;
+}
+
+html.dark .markdown-terminal strong {
+  color: #ffffff;
+}
+
+html:not(.dark) .markdown-terminal strong {
+  color: #0f172a;
+}
+
+.markdown-terminal ul, .markdown-terminal ol {
+  margin-left: 1.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.markdown-terminal li {
+  margin-bottom: 0.5rem;
+  font-size: 1.025rem;
+}
+
+html.dark .markdown-terminal li {
+  color: #cbd5e1;
+}
+
+html:not(.dark) .markdown-terminal li {
+  color: #334155;
+}
+
+.markdown-terminal ul > li {
+  list-style-type: square;
+}
+
+.markdown-terminal blockquote {
+  border-left: 4px solid #f43f5e;
+  padding-left: 1.25rem;
+  margin: 1.25rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-size: 1.05rem;
+}
+
+html.dark .markdown-terminal blockquote {
+  color: #f1f5f9;
+  background: rgba(244, 63, 94, 0.09);
+}
+
+html:not(.dark) .markdown-terminal blockquote {
+  color: #881337;
+  background: rgba(244, 63, 94, 0.07);
+}
+
+.markdown-terminal code {
+  font-family: 'JetBrains Mono', monospace;
+  padding: 0.25rem 0.55rem;
+  border-radius: 0.35rem;
+  font-size: 0.92em;
+}
+
+html.dark .markdown-terminal code {
+  background-color: #1e293b;
+  color: #38bdf8;
+  border: 1px solid #334155;
+}
+
+html:not(.dark) .markdown-terminal code {
+  background-color: #f1f5f9;
+  color: #0284c7;
+  border: 1px solid #e2e8f0;
+}
+
+.markdown-terminal pre {
+  padding: 1.25rem;
+  border-radius: 0.6rem;
+  overflow-x: auto;
+  margin-bottom: 1.25rem;
+}
+
+html.dark .markdown-terminal pre {
+  background-color: #0b0f19;
+  border: 1px solid #1e293b;
+}
+
+html:not(.dark) .markdown-terminal pre {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.markdown-terminal table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1.5rem 0;
+  font-size: 0.975rem;
+  border-radius: 0.6rem;
+  overflow: hidden;
+}
+
+html.dark .markdown-terminal table {
+  border: 1px solid #1e293b;
+}
+
+html:not(.dark) .markdown-terminal table {
+  border: 1px solid #e2e8f0;
+}
+
+.markdown-terminal th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+html.dark .markdown-terminal th {
+  background-color: #16233e;
+  color: #38bdf8;
+  border-bottom: 1px solid #1e293b;
+  border-right: 1px solid #1e293b;
+}
+
+html:not(.dark) .markdown-terminal th {
+  background-color: #f1f5f9;
+  color: #0284c7;
+  border-bottom: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+}
+
+.markdown-terminal th:last-child {
+  border-right: none;
+}
+
+.markdown-terminal td {
+  padding: 0.85rem 1rem;
+  font-size: 0.975rem;
+}
+
+html.dark .markdown-terminal td {
+  border-bottom: 1px solid #1e293b;
+  border-right: 1px solid #1e293b;
+  color: #cbd5e1;
+}
+
+html:not(.dark) .markdown-terminal td {
+  border-bottom: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+  color: #334155;
+}
+
+.markdown-terminal td:last-child {
+  border-right: none;
+}
+
+.markdown-terminal tr:last-child td {
+  border-bottom: none;
+}
+
+html.dark .markdown-terminal tr:nth-child(even) {
+  background-color: rgba(15, 23, 42, 0.4);
+}
+
+html:not(.dark) .markdown-terminal tr:nth-child(even) {
+  background-color: rgba(241, 245, 249, 0.5);
+}
+
+/* Depth Mode Card Buttons */
+.depth-btn {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.depth-btn:hover {
+  transform: translateY(-1px);
+}
+
+.depth-btn:active {
+  transform: translateY(0);
+}
+
